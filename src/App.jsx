@@ -40,7 +40,14 @@ function App() {
         <Route path="/" element={<Home />} />
 
         {/* Admin Login */}
-        <Route path="/admin/login" element={<AdminLogin />} />
+       <Route
+  path="/admin/login"
+  element={
+    <div style={{ padding: "50px", color: "black" }}>
+      ADMIN LOGIN ROUTE WORKS
+    </div>
+  }
+/>
         <Route
   path="/admin/dashboard"
   element={<AdminDashboard />}

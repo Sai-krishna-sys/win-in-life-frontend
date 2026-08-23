@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { LockKeyhole, Mail, LogIn } from "lucide-react";
-
+import { Link, useNavigate } from "react-router-dom";
 const AdminLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-
+const navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -49,8 +49,7 @@ const AdminLogin = () => {
       );
 
       // Go to admin dashboard
-      window.location.href = "/admin/dashboard";
-
+     navigate("/admin/dashboard");
     } catch (error) {
       console.error("Login error:", error);
 
@@ -166,9 +165,9 @@ const AdminLogin = () => {
 
         {/* Footer */}
         <div className="admin-login-footer">
-          <a href="/">
-            ← Back to Website
-          </a>
+         <Link to="/">
+  ← Back to Website
+</Link>
         </div>
 
       </div>

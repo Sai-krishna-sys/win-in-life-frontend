@@ -1,30 +1,171 @@
+import { useState } from "react";
+import { LockKeyhole, Mail, LogIn } from "lucide-react";
 
 const AdminLogin = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    setError("");
+    setLoading(true);
+
+    try {
+      const response = await fetch(
+        "https://win-in-life-backend.onrender.com/api/auth/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email,
+            password,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data.message || "Invalid email or password."
+        );
+      }
+
+      localStorage.setItem("adminToken", data.token);
+
+      localStorage.setItem(
+        "admin",
+        JSON.stringify(data.admin)
+      );
+
+      window.location.href = "/admin/dashboard";
+    } catch (error) {
+      console.error("Login error:", error);
+
+      setError(
+        error.message ||
+          "Unable to login. Please try again."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "#ffffff",
-        color: "#111111",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        flexDirection: "column",
-        fontFamily: "Arial, sans-serif",
-      }}
-    >
-      <h1>ADMIN LOGIN WORKS</h1>
+    <div className="admin-login-page">
+      <div className="admin-login-card">
 
-      <p>
-        React Router is successfully loading the Admin Login page.
-      </p>
+        {/* Logo */}
+        <div className="admin-login-logo">
+          <div className="admin-logo-mark">
+            W
+          </div>
 
-      <a href="/">
-        ← Back to Website
-      </a>
+          <div>
+            <h1>Win In Life</h1>
+
+            <span>
+              Child Development Centre
+            </span>
+          </div>
+        </div>
+
+        {/* Heading */}
+        <div className="admin-login-heading">
+          <h2>Admin Login</h2>
+
+          <p>
+            Sign in to manage assessment requests
+            and appointments.
+          </p>
+        </div>
+
+        {/* Error */}
+        {error && (
+          <div className="admin-login-error">
+            {error}
+          </div>
+        )}
+
+        {/* Form */}
+        <form
+          onSubmit={handleSubmit}
+          className="admin-login-form"
+        >
+          {/* Email */}
+          <div className="admin-form-field">
+            <label htmlFor="admin-email">
+              Email Address
+            </label>
+
+            <div className="admin-input-wrapper">
+              <Mail size={18} />
+
+              <input
+                id="admin-email"
+                type="email"
+                placeholder="Enter admin email"
+                value={email}
+                onChange={(e) =>
+                  setEmail(e.target.value)
+                }
+                required
+              />
+            </div>
+          </div>
+
+          {/* Password */}
+          <div className="admin-form-field">
+            <label htmlFor="admin-password">
+              Password
+            </label>
+
+            <div className="admin-input-wrapper">
+              <LockKeyhole size={18} />
+
+              <input
+                id="admin-password"
+                type="password"
+                placeholder="Enter password"
+                value={password}
+                onChange={(e) =>
+                  setPassword(e.target.value)
+                }
+                required
+              />
+            </div>
+          </div>
+
+          {/* Login */}
+          <button
+            type="submit"
+            className="admin-login-button"
+            disabled={loading}
+          >
+            <LogIn size={18} />
+
+            {loading
+              ? "Signing in..."
+              : "Login to Admin Panel"}
+          </button>
+        </form>
+
+        {/* Footer */}
+        <div className="admin-login-footer">
+          <a href="/">
+            ← Back to Website
+          </a>
+        </div>
+
+      </div>
     </div>
   );
 };
 
 export default AdminLogin;
-
